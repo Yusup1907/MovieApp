@@ -1,10 +1,29 @@
 import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import COLORS from "../constants/Colors";
+import GenreCards from "../components/GenreCards";
+import ItemSeparator from "../components/ItemSeparator";
 
 const Genre = ["All", "Action", "Adventure", "Comedy", "Horor", "Romance"];
 
 const HomeScreen = () => {
+  const [activeGenre, setActiveGenre] = useState("All");
+  const [nowPlayingMovies, setNowPlayingMovies] = useState({});
+  const [upcomingMovies, setUpcomingMovies] = useState({});
+  const [genres, setGenres] = useState([{ id: 10110, name: "All" }]);
+
+//   useEffect(() => {
+//     getNowPlayingMovies().then((movieResponse) =>
+//       setNowPlayingMovies(movieResponse.data)
+//     );
+//     getUpcomingMovies().then((movieResponse) =>
+//       setUpcomingMovies(movieResponse.data)
+//     );
+//     getAllGenres().then((genreResponse) =>
+//       setGenres([...genres, ...genreResponse.data.genres])
+//     );
+//   }, []);
   return (
     <ScrollView style={styles.container}>
       <StatusBar
@@ -21,8 +40,15 @@ const HomeScreen = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item}
-        renderItem={({ item, index }) => {
-          return <View></View>;
+        ItemSeparatorComponent={() => <ItemSeparator width={20} />}
+        ListHeaderComponent={() => <ItemSeparator width={20} />}
+        ListFooterComponent={() => <ItemSeparator width={20} />}
+        renderItem={({ item }) => {
+          <GenreCards
+            genreName={item}
+            active={item.name === activeGenre ? true : false}
+            onPress={setActiveGenre}
+          />;
         }}
       />
     </ScrollView>
