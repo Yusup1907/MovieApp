@@ -2,16 +2,15 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import COLORS from "../constants/Colors";
+import FONTS from "../constants/Fonts";
 import GenreCards from "../components/GenreCards";
+import MovieCard from "../components/MovieCards";
 import ItemSeparator from "../components/ItemSeparator";
 
 const Genre = ["All", "Action", "Adventure", "Comedy", "Horor", "Romance"];
 
 const HomeScreen = () => {
   const [activeGenre, setActiveGenre] = useState("All");
-  const [nowPlayingMovies, setNowPlayingMovies] = useState({});
-  const [upcomingMovies, setUpcomingMovies] = useState({});
-  const [genres, setGenres] = useState([{ id: 10110, name: "All" }]);
 
 //   useEffect(() => {
 //     getNowPlayingMovies().then((movieResponse) =>
@@ -35,6 +34,7 @@ const HomeScreen = () => {
         <Text style={styles.headerTitle}>Now Playing Movie</Text>
         <Text style={styles.headerSubTitle}>VIEW ALL</Text>
       </View>
+      <View style={styles.genreListContainer}>
       <FlatList
         data={Genre}
         horizontal
@@ -51,6 +51,23 @@ const HomeScreen = () => {
           />;
         }}
       />
+      </View>
+      <View>
+      <FlatList
+        data={Genre}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item}
+        ItemSeparatorComponent={() => <ItemSeparator width={20} />}
+        ListHeaderComponent={() => <ItemSeparator width={20} />}
+        ListFooterComponent={() => <ItemSeparator width={20} />}
+        renderItem={({ item }) => {
+          <MovieCard
+          title={item}
+          />;
+        }}
+      />
+      </View>
     </ScrollView>
   );
 };
@@ -69,12 +86,12 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    // fontFamily: FONTS.REGULAR,
+    fontFamily: FONTS.REGULAR,
   },
   headerSubTitle: {
     fontSize: 13,
     color: COLORS.ACTIVE,
-    // fontFamily: FONTS.BOLD,
+    fontFamily: FONTS.BOLD,
   },
   genreListContainer: {
     paddingVertical: 10,
