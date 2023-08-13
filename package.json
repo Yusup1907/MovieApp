@@ -25,5 +25,8 @@
   "devDependencies": {
     "@babel/core": "^7.20.0"
   },
-  "private": true
+  "private": true,
+  "projectConfig": {
+    "apiKey": "514458ad2f8f5c5364e8b8e6fa9eb85e"
+  }
 }

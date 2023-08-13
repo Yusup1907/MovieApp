@@ -1,28 +1,42 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import COLORS from "../constants/Colors";
 import FONTS from "../constants/Fonts";
 import GenreCards from "../components/GenreCards";
 import MovieCard from "../components/MovieCards";
 import ItemSeparator from "../components/ItemSeparator";
+import {
+  getAllGenres,
+  getNowPlayingMovies,
+  getUpcomingMovies,
+} from "../services/MovieServices";
 
 const Genre = ["All", "Action", "Adventure", "Comedy", "Horor", "Romance"];
 
 const HomeScreen = () => {
   const [activeGenre, setActiveGenre] = useState("All");
+  const [nowPlayingMovies, setNowPlayingMovies] = useState({});
+  const [upcomingMovies, setUpcomingMovies] = useState({});
+  const [genres, setGenres] = useState([{ id: "all", name: "All" }]);
 
-//   useEffect(() => {
-//     getNowPlayingMovies().then((movieResponse) =>
-//       setNowPlayingMovies(movieResponse.data)
-//     );
-//     getUpcomingMovies().then((movieResponse) =>
-//       setUpcomingMovies(movieResponse.data)
-//     );
-//     getAllGenres().then((genreResponse) =>
-//       setGenres([...genres, ...genreResponse.data.genres])
-//     );
-//   }, []);
+  useEffect(() => {
+    getNowPlayingMovies().then((movieResponse) =>
+      setNowPlayingMovies(movieResponse.data)
+    );
+    getUpcomingMovies().then((movieResponse) =>
+      setUpcomingMovies(movieResponse.data)
+    );
+    getAllGenres().then((genreResponse) => {
+      const uniqueGenres = genreResponse.data.genres.filter(
+        (genre, index, self) =>
+          index === self.findIndex((g) => g.id === genre.id)
+      );
+
+      setGenres([...genres, ...uniqueGenres]);
+    });
+  }, []);
+
   return (
     <ScrollView style={styles.container}>
       <StatusBar
@@ -31,42 +45,74 @@ const HomeScreen = () => {
         backgroundColor={COLORS.BASIC_BACKGROUND}
       />
       <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Now Playing Movie</Text>
+        <Text style={styles.headerTitle}>Now Playing Movies</Text>
         <Text style={styles.headerSubTitle}>VIEW ALL</Text>
       </View>
       <View style={styles.genreListContainer}>
-      <FlatList
-        data={Genre}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item}
-        ItemSeparatorComponent={() => <ItemSeparator width={20} />}
-        ListHeaderComponent={() => <ItemSeparator width={20} />}
-        ListFooterComponent={() => <ItemSeparator width={20} />}
-        renderItem={({ item }) => {
-          <GenreCards
-            genreName={item}
-            active={item.name === activeGenre ? true : false}
-            onPress={setActiveGenre}
-          />;
-        }}
-      />
+        <FlatList
+          data={genres}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id.toString()}
+          ItemSeparatorComponent={() => <ItemSeparator width={20} />}
+          ListHeaderComponent={() => <ItemSeparator width={20} />}
+          ListFooterComponent={() => <ItemSeparator width={20} />}
+          renderItem={({ item }) => (
+            <GenreCards
+              genreName={item.name}
+              active={item.name === activeGenre ? true : false}
+              onPress={setActiveGenre}
+            />
+          )}
+        />
       </View>
       <View>
-      <FlatList
-        data={Genre}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item}
-        ItemSeparatorComponent={() => <ItemSeparator width={20} />}
-        ListHeaderComponent={() => <ItemSeparator width={20} />}
-        ListFooterComponent={() => <ItemSeparator width={20} />}
-        renderItem={({ item }) => {
-          <MovieCard
-          title={item}
-          />;
-        }}
-      />
+        <FlatList
+          data={nowPlayingMovies.results}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id.toString()}
+          ItemSeparatorComponent={() => <ItemSeparator width={20} />}
+          ListHeaderComponent={() => <ItemSeparator width={20} />}
+          ListFooterComponent={() => <ItemSeparator width={20} />}
+          renderItem={({ item }) => (
+            <MovieCard
+              title={item.title}
+              language={item.original_language}
+              voteAverage={item.vote_average}
+              voteCount={item.vote_count}
+              poster={item.poster_path}
+              heartLess={false}
+              onPress={() => navigation.navigate("movie", { movieId: item.id })}
+            />
+          )}
+        />
+      </View>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>Coming Soon</Text>
+        <Text style={styles.headerSubTitle}>VIEW ALL</Text>
+      </View>
+      <View>
+        <FlatList
+          data={upcomingMovies.results}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id.toString()}
+          ItemSeparatorComponent={() => <ItemSeparator width={20} />}
+          ListHeaderComponent={() => <ItemSeparator width={20} />}
+          ListFooterComponent={() => <ItemSeparator width={20} />}
+          renderItem={({ item }) => (
+            <MovieCard
+              title={item.title}
+              language={item.original_language}
+              voteAverage={item.vote_average}
+              voteCount={item.vote_count}
+              poster={item.poster_path}
+              size={0.6}
+              onPress={() => navigation.navigate("movie", { movieId: item.id })}
+            />
+          )}
+        />
       </View>
     </ScrollView>
   );
