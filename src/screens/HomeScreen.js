@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import COLORS from "../constants/Colors";
 import FONTS from "../constants/Fonts";
 import GenreCards from "../components/GenreCards";
@@ -15,6 +16,7 @@ import {
 const Genre = ["All", "Action", "Adventure", "Comedy", "Horor", "Romance"];
 
 const HomeScreen = () => {
+  const navigation = useNavigation();
   const [activeGenre, setActiveGenre] = useState("All");
   const [nowPlayingMovies, setNowPlayingMovies] = useState({});
   const [upcomingMovies, setUpcomingMovies] = useState({});
