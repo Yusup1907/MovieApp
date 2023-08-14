@@ -2,7 +2,7 @@ const axios = require("axios").default;
 import {
   IMDB_BASE_URL,
   IMDB_API_KEY,
-  IMDB_IMAGE_BASE_URL,
+  IMDB_IMAGES_URL,
   ENDPOINTS,
   YOUTUBE_BASE_URL,
 } from "../constants/Urls";
@@ -29,7 +29,7 @@ const getMovieById = (movieId, append_to_response = "") =>
 
 const getAllGenres = () => IMDB_HTTP_REQUEST.get(ENDPOINTS.GENRES);
 
-const getPoster = (path) => `${IMDB_IMAGE_BASE_URL}/original${path}`;
+const getPoster = (path) => `${IMDB_IMAGES_URL}/original${path}`;
 
 const getVideo = (key) => `${YOUTUBE_BASE_URL}?v=${key}`;
 

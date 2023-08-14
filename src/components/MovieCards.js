@@ -26,6 +26,7 @@ const MovieCard = ({
 }) => {
   const [liked, setLiked] = useState(false);
   const [voteCountValue, setVoteCountValue] = useState(voteCount);
+  
 
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
