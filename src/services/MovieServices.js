@@ -25,7 +25,7 @@ const getMovieById = (movieId, append_to_response = "") =>
   IMDB_HTTP_REQUEST.get(
     `${ENDPOINTS.MOVIE}/${movieId}`,
     append_to_response ? { params: { append_to_response } } : null
-  );
+);
 
 const getAllGenres = () => IMDB_HTTP_REQUEST.get(ENDPOINTS.GENRES);
 

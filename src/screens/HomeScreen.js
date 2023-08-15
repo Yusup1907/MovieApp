@@ -13,7 +13,6 @@ import {
   getUpcomingMovies,
 } from "../services/MovieServices";
 
-const Genre = ["All", "Action", "Adventure", "Comedy", "Horor", "Romance"];
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -39,6 +38,8 @@ const HomeScreen = () => {
     });
   }, []);
 
+  
+
   return (
     <ScrollView style={styles.container}>
       <StatusBar
@@ -56,14 +57,14 @@ const HomeScreen = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={() => <ItemSeparator width={20} />}
-          ListHeaderComponent={() => <ItemSeparator width={20} />}
-          ListFooterComponent={() => <ItemSeparator width={20} />}
+          ItemSeparatorComponent={() => <ItemSeparator width={10} />}
+          ListHeaderComponent={() => <ItemSeparator width={10} />}
+          ListFooterComponent={() => <ItemSeparator width={10} />}
           renderItem={({ item }) => (
             <GenreCards
               genreName={item.name}
-              active={item.name === activeGenre ? true : false}
-              onPress={setActiveGenre}
+              active={item.name === activeGenre}
+              onPress={(genre) => setActiveGenre(genre)}
             />
           )}
         />
@@ -134,7 +135,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: FONTS.REGULAR,
+    fontFamily: FONTS.BOLD,
+    color: COLORS.BLACK,
   },
   headerSubTitle: {
     fontSize: 13,

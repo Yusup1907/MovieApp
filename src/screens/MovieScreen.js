@@ -209,13 +209,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: setWidth((100 - 145) / 2),
     top: 0,
-    borderBottomRightRadius: 300,
-    borderBottomLeftRadius: 300,
     elevation: 8,
   },
   moviePosterImage: {
-    borderBottomRightRadius: 300,
-    borderBottomLeftRadius: 300,
     width: setWidth(145),
     height: setHeight(35),
   },
