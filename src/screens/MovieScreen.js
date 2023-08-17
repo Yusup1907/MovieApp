@@ -19,6 +19,7 @@ import {
   getPoster,
   getVideo,
   getLanguage,
+  getUserReviews,
 } from "../services/MovieServices";
 import ItemSeparator from "../components/ItemSeparator";
 import CastCard from "../components/CastCard";
@@ -26,6 +27,7 @@ import MovieCard from "../components/MovieCards";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { APPEND_TO_RESPONSE as AR } from "../constants/Urls";
+import Pagination from "../components/Pagination";
 
 const { height, width } = Dimensions.get("window");
 
@@ -36,13 +38,47 @@ const MovieScreen = ({ route, navigation }) => {
   const { movieId } = route.params;
   const [movie, setMovie] = useState({});
   const [isCastSelected, setIsCastSelected] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const reviewsPerPage = 5;
 
   useEffect(() => {
     getMovieById(
       movieId,
       `${AR.VIDEOS},${AR.CREDITS},${AR.RECOMMENDATIONS},${AR.SIMILAR}`
-    ).then((response) => setMovie(response?.data));
+    ).then((response) => {
+      setMovie(response?.data);
+  
+      getUserReviews(movieId).then((response) => {
+        const reviews = response?.data?.results;
+        setMovie((prevMovie) => ({
+          ...prevMovie,
+          reviews,
+        }));
+  
+        const totalReviews = reviews.length;
+        setTotalPages(Math.ceil(totalReviews / reviewsPerPage));
+      });
+    });
   }, []);
+
+  const getReviewsForCurrentPage = () => {
+    const startIndex = (currentPage - 1) * reviewsPerPage;
+    const endIndex = startIndex + reviewsPerPage;
+    return movie?.reviews?.slice(startIndex, endIndex) || [];
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -151,6 +187,24 @@ const MovieScreen = ({ route, navigation }) => {
           )}
         />
       </View>
+      <Text style={styles.extraListTitle}>User Reviews</Text>
+      <FlatList
+        data={getReviewsForCurrentPage()}
+        keyExtractor={(item) => item?.id?.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.userReviewContainer}>
+            <Text style={styles.userReviewAuthor}>{item?.author}</Text>
+            <Text style={styles.userReviewContent}>{item?.content}</Text>
+            <Text style={styles.userReviewCreatedAt}>{item?.created_at}</Text>
+          </View>
+        )}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onNextPage={handleNextPage}
+        onPrevPage={handlePrevPage}
+      />
       <Text style={styles.extraListTitle}>Recommended Movies</Text>
       <FlatList
         data={movie?.recommendations?.results}
@@ -314,6 +368,29 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.BOLD,
     fontSize: 18,
     marginVertical: 8,
+  },
+  userReviewContainer: {
+    backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginVertical: 10,
+  },
+  userReviewAuthor: {
+    color: COLORS.BLACK,
+    fontFamily: FONTS.BOLD,
+    fontSize: 16,
+  },
+  userReviewContent: {
+    color: COLORS.LIGHT_GRAY,
+    paddingVertical: 5,
+    fontFamily: FONTS.REGULAR,
+    fontSize: 14,
+    textAlign: "justify",
+  },
+  userReviewCreatedAt: {
+    color: COLORS.LIGHT_GRAY,
+    fontFamily: FONTS.REGULAR,
+    fontSize: 12,
   },
 });
 

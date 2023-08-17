@@ -33,6 +33,9 @@ const getPoster = (path) => `${IMDB_IMAGES_URL}/original${path}`;
 
 const getVideo = (key) => `${YOUTUBE_BASE_URL}?v=${key}`;
 
+const getUserReviews = (movieId) =>
+  IMDB_HTTP_REQUEST.get(`${ENDPOINTS.MOVIE}/${movieId}/reviews`);
+
 const getLanguage = (language_iso) =>
   LANGUAGES.find((language) => language.iso_639_1 === language_iso);
 
@@ -44,4 +47,5 @@ export {
   getPoster,
   getLanguage,
   getVideo,
+  getUserReviews,
 };

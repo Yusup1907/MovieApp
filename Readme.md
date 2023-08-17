@@ -84,6 +84,17 @@ A card that displays movie information, including title, language, rating, and p
 - `heartLess` (Boolean): Indicates whether to display a heart icon for liking.
 - `onPress` (Function): A function to handle movie card press events.
 
+### Pagination
+
+A component for implementing pagination with "Previous Page" and "Next Page" buttons.
+
+#### Props
+
+- `currentPage` (Number): The current page of reviews.
+- `totalPages` (Number): The total number of pages.
+- `onNextPage` (Function): A function to handle moving to the next page.
+- `onPrevPage` (Function): A function
+
 ## Setup Instructions
 
 1. **Clone Repository**: Clone the Movie App repository using the provided Git URL.

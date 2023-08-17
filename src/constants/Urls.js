@@ -12,6 +12,7 @@ const ENDPOINTS = {
   UPCOMING_MOVIES: "/movie/upcoming",
   GENRES: "/genre/movie/list",
   MOVIE: "/movie",
+  USER_REVIEWS: "/movie/{movie_id}/reviews",
 };
 
 const APPEND_TO_RESPONSE = {
