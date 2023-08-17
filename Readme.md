@@ -24,6 +24,9 @@ The Home Screen displays a list of currently playing movies and upcoming movies.
 
 The Movie Details Screen displays detailed information about a selected movie, including its title, overview, release date, language, and rating.
 
+![User Reviews1](./screenshot/user_review1.jpeg)
+![User Reviews2](./screenshot/user_review2.jpeg)
+
 
 ## Dependencies
 
